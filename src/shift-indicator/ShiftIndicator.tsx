@@ -35,10 +35,10 @@ export class ShiftIndicator extends React.Component<any, State> {
     }
 
     getCurrentShift = (time: Date) => {
-        if(this.state.isFire){
+        if (this.state.isFire) {
             return this.getFRSshift(time);
         }
-        else{
+        else {
             return this.getEMSshift(time);
         }
     }
@@ -50,15 +50,17 @@ export class ShiftIndicator extends React.Component<any, State> {
         const shiftScheduleFRS = [3, 2, 1];
 
         if (hourOfDay < 8) {
-            console.log('before 8am');
             daysPassedSince -= 1;
         }
-        return shiftScheduleFRS[(daysPassedSince % 3)];
+        if (Math.sign(daysPassedSince) == -1) {
+            shiftScheduleFRS.push(shiftScheduleFRS[0])
+            shiftScheduleFRS.reverse().pop();
+        }
+        return shiftScheduleFRS[Math.abs(daysPassedSince % 3)];
     }
     getEMSshift = (time: Date): number => {
-        const elapsedTime = time.getTime() - this.lastKnownEMSduty.getTime(); 
+        const elapsedTime = time.getTime() - this.lastKnownEMSduty.getTime();
         let daysPassedSince = Math.floor(elapsedTime / (1000 * 60 * 60 * 24));
-        console.log({daysPassedSince})
         const hourOfDay = time.getHours();
         const shiftScheduleEMS = [1, 2, 2, 4, 4, 3, 3, 1];
         if (hourOfDay >= 20) {
@@ -67,10 +69,11 @@ export class ShiftIndicator extends React.Component<any, State> {
         else if (hourOfDay < 8) {
             daysPassedSince += 3;
         }
-
-        console.log(daysPassedSince)
-        // console.log(hourOfDay)
-        return shiftScheduleEMS[(daysPassedSince % 8)];
+        if (Math.sign(daysPassedSince) == -1) {
+            shiftScheduleEMS.push(shiftScheduleEMS[0])
+            shiftScheduleEMS.reverse().pop();
+        }
+        return shiftScheduleEMS[Math.abs(daysPassedSince % 8)];
     }
 
     setTimeStamp = (value: any) => {
