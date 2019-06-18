@@ -8,6 +8,7 @@ interface State {
     selectedTime: Date
     isFire: boolean
     clicked: boolean
+    timeZone: string
 }
 
 export class ShiftIndicator extends React.Component<any, State> {
@@ -15,7 +16,8 @@ export class ShiftIndicator extends React.Component<any, State> {
     state = {
         selectedTime: new Date(),
         isFire: true,
-        clicked: false
+        clicked: false,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     }
 
     //Why is my constructor weird?
@@ -23,6 +25,7 @@ export class ShiftIndicator extends React.Component<any, State> {
         super(props);
         setInterval(this.updateTime, 1000);
     }
+    
     lastKnownFRSduty: Date = new Date(2018, 5, 24); //R3
     lastKnownEMSduty: Date = new Date(2019, 0, 1); //R1 , R4
 
@@ -52,7 +55,7 @@ export class ShiftIndicator extends React.Component<any, State> {
         if (hourOfDay < 8) {
             daysPassedSince -= 1;
         }
-        if (Math.sign(daysPassedSince) == -1) {
+        if (Math.sign(daysPassedSince) === -1) {
             shiftScheduleFRS.push(shiftScheduleFRS[0])
             shiftScheduleFRS.reverse().pop();
         }
@@ -69,7 +72,7 @@ export class ShiftIndicator extends React.Component<any, State> {
         else if (hourOfDay < 8) {
             daysPassedSince += 3;
         }
-        if (Math.sign(daysPassedSince) == -1) {
+        if (Math.sign(daysPassedSince) === -1) {
             shiftScheduleEMS.push(shiftScheduleEMS[0])
             shiftScheduleEMS.reverse().pop();
         }
