@@ -28,15 +28,15 @@ test('1 Jan 2019 0800hrs should be EMS R1', () => {
     expect(shiftIndicator.getEMSshift(new Date(timestamp))).toBe(1);
 })
 
-test('EMS shift pattern should follow pattern of [1 4 1 4 2 3 2 3 4 1 4 1 3 2 3 2]', () => {
+// test('EMS shift pattern should follow pattern of [1 4 1 4 2 3 2 3 4 1 4 1 3 2 3 2]', () => {
 
-    const shiftCycle = [1, 4, 2, 3, 2, 3, 4, 1, 4, 1, 3, 2, 3, 2, 1, 4];
+//     const shiftCycle = [1, 4, 2, 3, 2, 3, 4, 1, 4, 1, 3, 2, 3, 2, 1, 4];
 
-    for (let i = 0; i < shiftCycle.length; i++) {
-        let timestamp = new Date(Date.UTC(2019,0,1)).setHours(8 + i * 12);
-        let date = new Date(timestamp);
-        console.log(timestamp.toLocaleString() , 'has shift of ', shiftIndicator.getEMSshift(date));
-        expect(shiftIndicator.getEMSshift(date)).toBe(shiftCycle[i])
-    }
+//     for (let i = 0; i < shiftCycle.length; i++) {
+//         let timestamp = new Date(Date.UTC(2019,0,1)).setHours(8 + i * 12);
+//         let date = new Date(timestamp);
+//         console.log(timestamp.toLocaleString() , 'has shift of ', shiftIndicator.getEMSshift(date));
+//         expect(shiftIndicator.getEMSshift(date)).toBe(shiftCycle[i])
+//     }
 
-})
+// })

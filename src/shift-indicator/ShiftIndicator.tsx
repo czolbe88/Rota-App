@@ -26,8 +26,8 @@ export class ShiftIndicator extends React.Component<any, State> {
         setInterval(this.updateTime, 1000);
     }
     
-    lastKnownFRSduty: Date = new Date(2018, 5, 24); //R3
-    lastKnownEMSduty: Date = new Date(2019, 0, 1); //R1 , R4
+    lastKnownFRSduty: Date = new Date(Date.UTC(2018, 5, 24)); //R3
+    lastKnownEMSduty: Date = new Date(Date.UTC(2019, 0, 1)); //R1 , R4
 
     updateTime = () => {
         if (!this.state.clicked) {
@@ -49,8 +49,10 @@ export class ShiftIndicator extends React.Component<any, State> {
     getFRSshift = (time: Date): number => {
         const elapsedTime = time.getTime() - this.lastKnownFRSduty.getTime(); //TODO: cannot search for a timestamp before this
         let daysPassedSince = Math.floor(elapsedTime / (1000 * 60 * 60 * 24));
+        console.log({daysPassedSince})
         // const hourOfDay = time.getHours();
         const hourOfDay = moment(time).tz("Asia/Singapore").hours();
+        console.log({hourOfDay})
         const shiftScheduleFRS = [3, 2, 1];
 
         if (hourOfDay < 8) {
@@ -66,6 +68,7 @@ export class ShiftIndicator extends React.Component<any, State> {
         const elapsedTime = time.getTime() - this.lastKnownEMSduty.getTime();
         let daysPassedSince = Math.floor(elapsedTime / (1000 * 60 * 60 * 24));
         const hourOfDay = moment(time).tz("Asia/Singapore").hours();
+        console.log({hourOfDay})
         const shiftScheduleEMS = [1, 2, 2, 4, 4, 3, 3, 1];
         if (hourOfDay >= 20) {
             daysPassedSince += 4;
