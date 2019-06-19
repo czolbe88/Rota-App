@@ -2,7 +2,7 @@
 import DateTimePicker from 'react-datetime-picker';
 import React from 'react';
 import { Container, Row, Button, Label } from 'reactstrap';
-
+import moment from 'moment-timezone';
 
 interface State {
     selectedTime: Date
@@ -49,7 +49,8 @@ export class ShiftIndicator extends React.Component<any, State> {
     getFRSshift = (time: Date): number => {
         const elapsedTime = time.getTime() - this.lastKnownFRSduty.getTime(); //TODO: cannot search for a timestamp before this
         let daysPassedSince = Math.floor(elapsedTime / (1000 * 60 * 60 * 24));
-        const hourOfDay = time.getHours();
+        // const hourOfDay = time.getHours();
+        const hourOfDay = moment(time).tz("Asia/Singapore").hours();
         const shiftScheduleFRS = [3, 2, 1];
 
         if (hourOfDay < 8) {
@@ -64,7 +65,7 @@ export class ShiftIndicator extends React.Component<any, State> {
     getEMSshift = (time: Date): number => {
         const elapsedTime = time.getTime() - this.lastKnownEMSduty.getTime();
         let daysPassedSince = Math.floor(elapsedTime / (1000 * 60 * 60 * 24));
-        const hourOfDay = time.getHours();
+        const hourOfDay = moment(time).tz("Asia/Singapore").hours();
         const shiftScheduleEMS = [1, 2, 2, 4, 4, 3, 3, 1];
         if (hourOfDay >= 20) {
             daysPassedSince += 4;
