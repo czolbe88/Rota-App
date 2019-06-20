@@ -116,6 +116,7 @@ blocks:
           - node --version
           - npm --version
           - echo $FIREBASE_TOKEN
+          - echo $SEMAPHORE_GIT_BRANCH
       jobs:
         - name: deploy to host
           commands:
