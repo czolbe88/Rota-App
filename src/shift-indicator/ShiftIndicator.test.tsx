@@ -4,11 +4,9 @@ import moment from 'moment-timezone';
 //date if not stated with UTC is intended to be in SG time
 const shiftIndicator = new ShiftIndicator({});
 
-const frsReferenceTimestamp = new Date(Date.UTC(2018, 5, 24));
-
-
 test('24th June 2018 should be FRS R3', () => {
-    expect(shiftIndicator.getFRSshift(new Date(frsReferenceTimestamp))).toBe(3);
+    const timestamp = new Date(Date.UTC(2018, 5, 24));
+    expect(shiftIndicator.getFRSshift(new Date(timestamp))).toBe(3);
 })
 
 test('FRS shift pattern should repeat 3,2,1 cycle', () => {

@@ -156,3 +156,25 @@ blocks:
   #           - cp ormconfig.ci.json ormconfig.json
   #           - npm run migrate:up
   #           - npm run test:e2e
+
+  - name: Deploy to firebase
+    task:
+      env_vars:
+        - name: NODE_ENV
+          value: test
+        - name: CI
+          value: 'true'
+      prologue:
+        commands:
+          - checkout
+          - nvm use
+          - node --version
+          - npm --version
+      jobs:
+        - name: deploy to host
+          commands:
+            # - cd src/client
+            - npm install -g firebase-tools
+            - cache restore client-node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),client-node-modules-$SEMAPHORE_GIT_BRANCH,client-node-modules-master
+            - npm run build
+            - firebase deploy --non-interactive --token $FIREBASE_TOKEN 
