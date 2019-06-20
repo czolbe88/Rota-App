@@ -115,6 +115,7 @@ blocks:
           - nvm use
           - node --version
           - npm --version
+          - echo $FIREBASE_TOKEN
       jobs:
         - name: deploy to host
           commands:
