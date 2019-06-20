@@ -41,13 +41,6 @@ blocks:
             # further blocks:
             - cache store client-node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json) node_modules
 
-        # Second parallel job:
-        # - name: server npm install and cache
-        #   commands:
-        #     - cd src/server
-        #     - cache restore server-node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),server-node-modules-$SEMAPHORE_GIT_BRANCH,server-node-modules-master
-        #     - npm install
-        #     - cache store server-node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json) node_modules
   - name: Tests
     task:
       env_vars:
@@ -67,7 +60,7 @@ blocks:
             - cache restore client-node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),client-node-modules-$SEMAPHORE_GIT_BRANCH,client-node-modules-master
             - npm test
 
-  # - name: E2e Tests
+  # - name: Deploy to firebase
   #   task:
   #     env_vars:
   #       - name: NODE_ENV
@@ -80,49 +73,14 @@ blocks:
   #         - nvm use
   #         - node --version
   #         - npm --version
-  #         # Start a Postgres database. On Semaphore, databases run in the same
-  #         # environment as your code.
-  #         # See https://docs.semaphoreci.com/article/32-ubuntu-1804-image#databases-and-services
-  #         - sem-service start postgres
-  #         # With unrestricted sudo access, you can install any additional
-  #         # system package:
-  #         - sudo apt-get install -y libgtk2.0-0
+  #         - echo $FIREBASE_TOKEN
+  #         - echo $SEMAPHORE_GIT_BRANCH
   #     jobs:
-  #       - name: Client Tests
+  #       - name: deploy to host
   #         commands:
-  #           - cd src/client
+  #           # - cd src/client
+  #           - npm install -g firebase-tools
   #           - cache restore client-node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),client-node-modules-$SEMAPHORE_GIT_BRANCH,client-node-modules-master
-  #           - npx cypress install
-  #           - npm run test:e2e
-  #       - name: Server Tests
-  #         commands:
-  #           - cd src/server
-  #           - cache restore server-node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),server-node-modules-$SEMAPHORE_GIT_BRANCH,server-node-modules-master
-  #           - cp ormconfig.ci.json ormconfig.json
-  #           - npm run migrate:up
-  #           - npm run test:e2e
-
-  - name: Deploy to firebase
-    task:
-      env_vars:
-        - name: NODE_ENV
-          value: test
-        - name: CI
-          value: 'true'
-      prologue:
-        commands:
-          - checkout
-          - nvm use
-          - node --version
-          - npm --version
-          - echo $FIREBASE_TOKEN
-          - echo $SEMAPHORE_GIT_BRANCH
-      jobs:
-        - name: deploy to host
-          commands:
-            # - cd src/client
-            - npm install -g firebase-tools
-            - cache restore client-node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),client-node-modules-$SEMAPHORE_GIT_BRANCH,client-node-modules-master
-            - npm run build
-            - firebase deploy --non-interactive --token $FIREBASE_TOKEN 
+  #           - npm run build
+  #           - firebase deploy --non-interactive --token $FIREBASE_TOKEN 
 
